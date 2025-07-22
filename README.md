@@ -21,31 +21,69 @@ To build a dashboard that can track and visualize the ROI of influencer campaign
 
 ### Understanding the data:
 Assumptions / data description:
-1. influencers
-   - 500 unique influencers
-   - id - unique id of the influencer
-   - name - Name of the influencer
-   - category - The 4 categories - Fitness, Health, Lifestyle, Parenting
-   - 3 Gender categories - Male, Female, Other
-   - Follower count - random number between 10000 to 1000000
-   - 4 Platforms - Instagram, Twitter, Tiktok, Youtube
+1. influencers - This table holds metadata about the influencers participating in your campaign.
 
-3. posts
-   - 10000 rows
-   - URL - URL of the post.
-   - date - ranging between April 23, 2025 and July 22, 2025 - 3 months
-   - caption - random one - liners
-   - reach - The number of unique users who viewed or were exposed to a given post. A random number between 1000 and 50000
-   - likes - Number of likes on respective posts
-   - comments - Number of comments on respective posts
+   500 unique influencers
+   
+   
+| Column         | Data type | Description                                                              | Assumptions Made                                                                                 |
+|----------------|-----------|--------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------|
+| id             | int       | Unique numeric identifier for each influencer                            | Sequential IDs from 1 to 500                                                                     |
+| name           | string    | Full name of the influencer                                              | Randomly generated using Faker                                                                   |
+| category       | string    | The niche or content domain of the influencer (e.g., Fitness, Nutrition) | Randomly selected from a curated list: "Fitness", "Nutrition", "Wellness", "Lifestyle", "Yoga"   |
+| gender         | string    | Gender of the influencer                                                 | Randomly selected from: "Male", "Female", "Other"                                                |
+| follower_count | int       | Total followers the influencer has across their primary platform         | Random int between 5,000 and 1,000,000 to represent nano to macro influencers                    |
+| platform       | string    | Primary social media platform used by the influencer                     | Randomly chosen from: "Instagram", "YouTube", "TikTok", "Twitter"                                |
 
-4. tracking_data
-   - source - The traffic source or referrer domain that led the user to the purchase
-   - campaign	- Name or ID of the marketing campaign - Format: Campaign_# where # ranges from 1 to 10
-   - influencer_id - Reference to the influencer (influencers.id) who drove the traffic
-   - user_id - Unique identifier of the user who placed an order - Format: user_# with random values simulating unique consumers
-   - product - Product purchased by the user - Chosen from a realistic product list from brands like MuscleBlaze, HKVitals, Gritzo
-   - brand - The brand to which the product belongs
-   - date -	Date of the conversion (i.e., when user placed the order) -	Random date in the last 60 days (-60d to today)
-   - orders -	Number of units ordered by the user -	Integer between 1 and 9, assuming small but multiple quantities per order
-   - revenue - Total revenue generated from the user order - Random float between ₹20 and ₹500, simulating average cart value in health and fitness e-commerce
+2. posts - Each row represents a piece of content posted by an influencer on a platform.
+
+   Number of rows - 10000
+
+| Column        | Data type | Description                            | Assumptions Made                                                                 |
+|---------------|-----------|----------------------------------------|----------------------------------------------------------------------------------|
+| influencer_id | int       | Foreign key referencing influencers.id | Ensures referential integrity — matches one of the 500 influencers               |
+| platform      | string    | Platform on which the post was made    | Matches the influencer's preferred platform or chosen randomly for variety       |
+| date          | date      | Date when the post was published       | Random date within the last 90 days (-90d to today)                              |
+| URL           | string    | Simulated link to the post             | Fake URLs generated using Faker (https://instagram.com/post/abc123)              |
+| caption       | string    | The text caption accompanying the post | Short fake sentence or phrase using Faker                                        |
+| reach         | int       | Number of people who saw the post      | Random int between 1,000 and 50,000 — loosely correlates with follower count     |
+| likes         | int       | Number of likes on the post            | Random int between 100 and 20,000 — loosely proportional to reach                |
+| comments      | int       | Number of comments on the post         | Random int between 10 and 1,000 — lower than likes to simulate engagement ratios |
+
+
+3. tracking_data - This dataset captures attribution data from users influenced by a campaign — essentially tying user actions back to an influencer and product.
+
+   Number of rows - 15000
+   
+
+| Column        | Data type | Description                                                              | Assumptions Made                                                                                      |
+|---------------|-----------|--------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------|
+| source        | string    | The traffic source or referrer  domain that led the user to the purchase | Simulated as a random domain  (e.g., fitshop.net) to reflect UTMs,  tracking URLs, or affiliate links |                                                                       
+| campaign      | string    | Name or ID of the marketing campaign                                     | Format: Campaign_# where # ranges from 1 to 10                                                        |
+| influencer_id | int       | Reference to the influencer  (influencers.id) who drove the traffic      | Randomly selected to simulate multi-influencer campaigns                                              |
+| user_id       | string    | Unique identifier of the  user who placed an order                       | Format: user_# with random  values simulating unique consumers                                        |
+| product       | string    | Product purchased by the user                                            | Chosen from a realistic product list  from brands like MuscleBlaze, etc.                              |
+| brand         | string    | The brand to which the product belongs                                   | Derived automatically from the  product using a mapping dictionary                                    |
+| date          | date      | Date of the conversion  (i.e., when user placed the order)               | Random date in the last 60 days (-60d to today)                                                       |
+| orders        | int       | Number of units ordered by the user                                      | Integer between 1 and 9, assuming small  but multiple quantities per order                            |
+| revenue       | float     | Total revenue generated  from the user order                             | Random float between ₹20 and ₹500,  simulating average cart value in health and fitness e-commerce    |  
+
+4. payouts - This dataset contains how much each influencer is paid, based either on per post or per order.
+
+   Number of rows - 500
+   
+| Column        | Data type | Description                                                                                  | Assumptions Made                                                  |
+|---------------|-----------|----------------------------------------------------------------------------------------------|-------------------------------------------------------------------|
+| influencer_id | int       | Reference to the influencer (influencers.ID)                                                 | Matches the influencer IDs in the influencers table               |
+| basis         | string    | The payout model used: either post (flat rate per post) or order (performance-based)         | Randomly chosen between "post" and "order"                        |
+| rate          | float     | The amount paid per post or per order, depending on the basis                                | Random float between ₹5 and ₹50                                   |
+| orders        | int       | If basis = order, this indicates the number of attributed orders; if post, it's just a dummy | Simulated between 5 and 100 for realism; unused if basis = "post" |
+| total_payout  | float     | The total amount paid to the influencer: rate * orders (for order basis) or just rate (post) | Calculated accordingly                                            |
+
+2. Tableau Dashboard
+   - Uploaded influencer campaign data
+- Track performance of posts and influencers
+- ROI and incremental ROAS calculation
+- Filtering by brand, product, influencer type, platform
+- Insights like: top influencers, best personas, poor ROIs
+- Optional: export to CSV/PDF
