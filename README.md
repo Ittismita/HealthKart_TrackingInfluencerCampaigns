@@ -85,7 +85,8 @@ Assumptions / data description:
      - influencer(id) 1--M posts(influencer_id)
      - influencer(id) 1--M tracking_data(influencer_id)
      - influencer(id) 1--1 payouts(influencer_id)
-    
+
+    ![data model](https://github.com/Ittismita/HealthKart_TrackingInfluencerCampaigns/blob/main/img/data_model.png)
      
 - Track performance of posts and influencers
 - ROI and incremental ROAS calculation
