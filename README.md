@@ -81,7 +81,12 @@ Assumptions / data description:
 | total_payout  | float     | The total amount paid to the influencer: rate * orders (for order basis) or just rate (post) | Calculated accordingly                                            |
 
 2. Tableau Dashboard
-   - Uploaded influencer campaign data
+   - Uploaded influencer campaign data and modeled data as follows
+     - influencer(id) 1--M posts(influencer_id)
+     - influencer(id) 1--M tracking_data(influencer_id)
+     - influencer(id) 1--1 payouts(influencer_id)
+    
+     
 - Track performance of posts and influencers
 - ROI and incremental ROAS calculation
 - Filtering by brand, product, influencer type, platform
