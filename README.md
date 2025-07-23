@@ -87,6 +87,16 @@ Assumptions / data description:
      - influencer(id) 1--1 payouts(influencer_id)
 
     ![data model](https://github.com/Ittismita/HealthKart_TrackingInfluencerCampaigns/blob/main/img/data_model.png)
+
+  - Created Calculated fields:
+    1. ERR - This is the most common engagement rate formula. ERR measures the percentage of people who interact with your content after seeing it.
+           - ERR = total number of engagements on a post(likes+comments) / reach of that post * 100
+    2. Incremental ROAS(Return on Ad Spend) - A metric that measures the additional revenue generated from an advertising campaign above and beyond what would have been earned without the campaign. Example: Let's say a brand spends $1000 on a campaign and sees $5000 in total revenue. The standard ROAS is 5:1. However, through incrementality testing, it's determined that $2000 of that revenue would have happened anyway (without the ad). iROAS would then calculate (5000-2000)/1000 = 3:1, indicating that the true incremental revenue from the campaign is $3 for every $1 spent. 
+
+       For this supporting calculated fields were created like
+       - Baseline Revenue - Assuming a 30% lift in revenue due to influencer impact = Revenue/1.3
+       - Incremental Revenue = Revenue - Baseline Revenue
+       - Finally, Incremental ROAS = Incremental Revenue / Total Payout
      
 - Track performance of posts and influencers
 - ROI and incremental ROAS calculation
