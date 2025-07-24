@@ -81,7 +81,7 @@ Assumptions / data description:
 | total_payout  | float     | The total amount paid to the influencer: rate * orders (for order basis) or just rate (post) | Calculated accordingly                                            |
 
 2. Tableau Dashboard
-   - Uploaded influencer campaign data and modeled data as follows
+   - Uploaded influencer campaign data and modeled data as follows:
      - influencer(id) 1--M posts(influencer_id)
      - influencer(id) 1--M tracking_data(influencer_id)
      - influencer(id) 1--1 payouts(influencer_id)
@@ -94,9 +94,20 @@ Assumptions / data description:
     2. Incremental ROAS(Return on Ad Spend) - A metric that measures the additional revenue generated from an advertising campaign above and beyond what would have been earned without the campaign. Example: Let's say a brand spends $1000 on a campaign and sees $5000 in total revenue. The standard ROAS is 5:1. However, through incrementality testing, it's determined that $2000 of that revenue would have happened anyway (without the ad). iROAS would then calculate (5000-2000)/1000 = 3:1, indicating that the true incremental revenue from the campaign is $3 for every $1 spent. 
 
        For this supporting calculated fields were created like
-       - Baseline Revenue - Assuming a 30% lift in revenue due to influencer impact = Revenue/1.3
+       - Baseline Revenue - Assuming a 30% lift in revenue due to influencer impact = Revenue / 1.3
        - Incremental Revenue = Revenue - Baseline Revenue
        - Finally, Incremental ROAS = Incremental Revenue / Total Payout
+    3. ROAS = Revenue / Total Payout = efficiency. E.g., 2.5 → we earned ₹2.5 for every ₹1 spent
+    4. ROI = (Revenue - Total Payout) / Total Payout = profitability. E.g., 1.5 → 150% return
+    5. Cost per Order = Total Payout / Orders = how much we're spending per order.
+    6. Revenue per Order = Revenue / Orders = how much value we're generating per order
+
+  - Page 1 - "Campaign Performance"
+    Charts, what they represent, what insights can be drawn from them, filters, interprestation of those charts(how to)
+
+  - Page 2 - "Influencer Insights"
+    Charts, what they represent, what insights can be drawn from them, filters, interprestation of those charts(how to)
+     
      
 - Track performance of posts and influencers
 - ROI and incremental ROAS calculation
