@@ -1,5 +1,5 @@
 # Dashboard for Tracking Influencer Campaigns
-Link : https://public.tableau.com/shared/87BN7DHJ8?:display_count=n&:origin=viz_share_link
+Link to the Dashboard : https://public.tableau.com/shared/87BN7DHJ8?:display_count=n&:origin=viz_share_link
 
 ## Context:
 HealthKart runs influencer campaigns across various social platforms (Instagram, YouTube, Twitter, etc.) to promote different products across multiple brands (e.g., MuscleBlaze, HKVitals, Gritzo). Influencers may be paid per post or per order.
@@ -69,7 +69,7 @@ Assumptions / data description:
 | orders        | int       | Number of units ordered by the user                                      | Integer between 1 and 9, assuming small  but multiple quantities per order                            |
 | revenue       | float     | Total revenue generated  from the user order                             | Random float between ₹20 and ₹500,  simulating average cart value in health and fitness e-commerce    |  
 
-4. payouts - This dataset contains how much each influencer is paid, based either on per post or per order.
+4. payouts - This dataset contains how much each influencer is paid by participating in the campaign, based either on per post or per order.
 
    Number of rows - 500
    
@@ -78,8 +78,8 @@ Assumptions / data description:
 | influencer_id | int       | Reference to the influencer (influencers.ID)                                                 | Matches the influencer IDs in the influencers table               |
 | basis         | string    | The payout model used: either post (flat rate per post) or order (performance-based)         | Randomly chosen between "post" and "order"                        |
 | rate          | float     | The amount paid per post or per order, depending on the basis                                | Random float between ₹5 and ₹50                                   |
-| orders        | int       | If basis = order, this indicates the number of attributed orders; if post, it's just a dummy | Simulated between 5 and 100 for realism; unused if basis = "post" |
-| total_payout  | float     | The total amount paid to the influencer: rate * orders (for order basis) or just rate (post) | Calculated accordingly                                            |
+| orders        | int       | total orders per influencer from tracking_data                                               | Sum of tracking_data.orders per influencer            |
+| total_payout  | float     | The total amount paid to the influencer: rate * orders                                       | Calculated accordingly                                            |
 
 2. Tableau Dashboard
    - Uploaded influencer campaign data and modeled data as follows:
@@ -121,10 +121,21 @@ Assumptions / data description:
   - Page 2 - "Influencer Insights"
     - This page provides an a view of performance on influencer level, filtered through influencer name, category, gender, month, brand, product and platform.
     - Insights that could be drawn, respective to the charts:
-      1. Who were the Top Influencers, ordered by ROAS of Campaigns they were involved in, with a tooltip to view the total payout they got being involved in that particular, campaign.("Top Inflencers" Bar Chart).
+      1. Who were the Top Influencers, ordered by ROAS of Campaigns they were involved in, with a tooltip to view the total payout they got by being involved in that particular campaign and the number of followers they have.("Top Inflencers" Bar Chart).
       2. Which category and gender combination showed good performance according to ROAS ("Best Personas (By Category+Gender)" Heatmap).
       3. Influencer wise Revenue and ROAS of Campaigns, where darker color = greater ROAS & bigger size = greater revenue generated, with a slider to change the number of orders ("Influencer-Level Summary" Treemap).
       4. How much was paid to influencers per month per platform ("Payout Over Time" Line chart).
       5. Post level division of reach, likes, comments and ERR(Engagement Rate by Reach) ("Post Level Performance" Bar chart).
      
       ![page 2](https://github.com/Ittismita/HealthKart_TrackingInfluencerCampaigns/blob/main/img/Page%202.png)
+
+
+### Assumptions made throughout:
+  1. There were 500 influencers and tracking data is for 3 months (April, May, June 2025).
+  2. For iROAS, the baseline revenue required was divided by 1.3, i.e. we're assuming the campaign caused a 30% lift in revenue.
+     In other words - Without the campaign, revenue would have been ~77% of what it actually was (1 / 1.3 ≈ 0.769)
+                      The campaign contributed the remaining 23% as incremental revenue
+                      So: If revenue = ₹130,000
+                          Baseline revenue = ₹130,000 / 1.3 = ₹100,000
+                          Incremental revenue = ₹30,000
+  3. The orders in payouts table is the summed up orders per influencer from tracking_data table.
