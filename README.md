@@ -1,4 +1,5 @@
 # Dashboard for Tracking Influencer Campaigns
+Link : https://public.tableau.com/shared/87BN7DHJ8?:display_count=n&:origin=viz_share_link
 
 ## Context:
 HealthKart runs influencer campaigns across various social platforms (Instagram, YouTube, Twitter, etc.) to promote different products across multiple brands (e.g., MuscleBlaze, HKVitals, Gritzo). Influencers may be paid per post or per order.
@@ -82,9 +83,9 @@ Assumptions / data description:
 
 2. Tableau Dashboard
    - Uploaded influencer campaign data and modeled data as follows:
-     - influencer(id) 1--M posts(influencer_id)
-     - influencer(id) 1--M tracking_data(influencer_id)
-     - influencer(id) 1--1 payouts(influencer_id)
+     - influencers(id) 1--M posts(influencer_id)
+     - influencers(id) 1--M tracking_data(influencer_id)
+     - influencers(id) 1--1 payouts(influencer_id)
 
     ![data model](https://github.com/Ittismita/HealthKart_TrackingInfluencerCampaigns/blob/main/img/data_model.png)
 
@@ -96,21 +97,34 @@ Assumptions / data description:
        For this supporting calculated fields were created like
        - Baseline Revenue - Assuming a 30% lift in revenue due to influencer impact = Revenue / 1.3
        - Incremental Revenue = Revenue - Baseline Revenue
-       - Finally, Incremental ROAS = Incremental Revenue / Total Payout
-    3. ROAS = Revenue / Total Payout = efficiency. E.g., 2.5 → we earned ₹2.5 for every ₹1 spent
-    4. ROI = (Revenue - Total Payout) / Total Payout = profitability. E.g., 1.5 → 150% return
-    5. Cost per Order = Total Payout / Orders = how much we're spending per order.
+       - Campaign Payout = tracking_data.Orders * payouts.Rate
+       - Finally, Incremental ROAS = Incremental Revenue / Campaign Payout
+    3. ROAS = Revenue / Campaign Payout = efficiency. E.g., 2.5 → we earned ₹2.5 for every ₹1 spent
+    4. ROI = (Revenue - Campaign Payout) / Campaign Payout = profitability. E.g., 1.5 → 150% return
+    5. Cost per Order = Campaign Payout / Orders = how much we're spending per order.
     6. Revenue per Order = Revenue / Orders = how much value we're generating per order
+    7. Extra Columns = Post ID, Profitability, ROI Category(Good or Poor ROI), Campaign Payout, Influencer Payout
 
   - Page 1 - "Campaign Performance"
-    Charts, what they represent, what insights can be drawn from them, filters, interprestation of those charts(how to)
+    - This page provides an overall view on the performance of the campaign, filtered through campaign name, product, brand, category, platform and month.
+    - Insights that could be drawn, respective to the charts:
+      1.  How much each campaign had placed orders ("Total orders" KPI).
+      2.  How much additional revenue was genrated through the campaign, beyond what would have been earned without the campaign(incremental ROAS(iROAS)). Eg. - If iROAS of a campaign is 0.1071, then we're making back just 10.71% of our ad spend, which is far below breakeven (iROAS = 1). The campaign is not profitable(Poor ROI) from an incremental standpoint, we're losing money relative to what we'd expected without the campaign ("Incremental ROAS" KPI).
+      3. Which campaigns were underperforming - ROAS < 1. Campaigns with poor ROIs ("Underperforming Campaigns (ROAS < 1)" Table).
+      4. ROAS vs ROI over time(min-max labeled) - how to interpret these - Eg. If ROAS is 0.1071, then in this campaign, we only earned ₹0.11 for every ₹1 spent. We're spending much more than we’re earning ("ROAS vs ROI over Time (by Campaign)" Line chart).
+      5. Cost per order vs Revenue per order - where if cost per order > revenue per order => Unprofitable else Profitable.("Cost per order vs Revenue per order" Bullet Graph)
+      6. Revenue generated vs the payout in each campaign ("Revenue vs Payout per Campaign" Bar chart).
+     
+      ![page 1](https://github.com/Ittismita/HealthKart_TrackingInfluencerCampaigns/blob/main/img/Page%201.png)
+
 
   - Page 2 - "Influencer Insights"
-    Charts, what they represent, what insights can be drawn from them, filters, interprestation of those charts(how to)
+    - This page provides an a view of performance on influencer level, filtered through influencer name, category, gender, month, brand, product and platform.
+    - Insights that could be drawn, respective to the charts:
+      1. Who were the Top Influencers, ordered by ROAS of Campaigns they were involved in, with a tooltip to view the total payout they got being involved in that particular, campaign.("Top Inflencers" Bar Chart).
+      2. Which category and gender combination showed good performance according to ROAS ("Best Personas (By Category+Gender)" Heatmap).
+      3. Influencer wise Revenue and ROAS of Campaigns, where darker color = greater ROAS & bigger size = greater revenue generated, with a slider to change the number of orders ("Influencer-Level Summary" Treemap).
+      4. How much was paid to influencers per month per platform ("Payout Over Time" Line chart).
+      5. Post level division of reach, likes, comments and ERR(Engagement Rate by Reach) ("Post Level Performance" Bar chart).
      
-     
-- Track performance of posts and influencers
-- ROI and incremental ROAS calculation
-- Filtering by brand, product, influencer type, platform
-- Insights like: top influencers, best personas, poor ROIs
-- Optional: export to CSV/PDF
+      ![page 2](https://github.com/Ittismita/HealthKart_TrackingInfluencerCampaigns/blob/main/img/Page%202.png)
